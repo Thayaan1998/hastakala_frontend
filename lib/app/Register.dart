@@ -183,7 +183,7 @@ class _RegisterState extends State<Register> {
                                   "Please "+arguments['name'].toString()),
                             ));
                           }else
-                          if(addressText.value.text.length<12){
+                          if(phonenumber.value.text.length<12){
                             ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                               content: Text(
                                   " Not Valid Phonenumber"),
