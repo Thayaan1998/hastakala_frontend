@@ -115,6 +115,51 @@ class AddItemState extends State<AddItem> {
     return response.body;
   }
 
+  machinelearningimages(id) async {
+    if(dropdownvalue=="Arts And Paintings"){
+      final response = await http.post(
+        Uri.parse(Config.mainUrl+'/addMachineLearingImages'),
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+        },
+        body: jsonEncode(<String, String>{
+          'itemId': id,
+          'type':dropdownvalue2
+        }),
+      );
+    }
+
+  }
+
+  String dropdownvalue2 = 'Select a Type';
+  var jobTile=['Select a Type'];
+
+  getJobTitle() async {
+    setState(() {
+      _isLoading=true;
+    });
+    var response2 = await http.post(
+      Uri.parse(Config.mainUrl + '/getJobTitle'),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+      body: jsonEncode(<String, String>{'category':dropdownvalue}),
+    );
+    // print(response2.body);
+    setState(() {
+      var getJobTitle = (jsonDecode(response2.body) as List);
+      jobTile=[];
+      jobTile.add("Select a Type");
+      for(var i=0;i<getJobTitle.length;i++){
+        jobTile.add(getJobTitle[i][0]);
+      }
+
+      _isLoading=false;
+    });
+  }
+  bool _isLoading=false;
+
+
   @override
   Widget build(BuildContext context) {
     // Build a Form widget using the _formKey created above.
@@ -210,12 +255,43 @@ class AddItemState extends State<AddItem> {
                 }).toList(),
                 // After selecting the desired option,it will
                 // change button value to selected value
-                onChanged: (String? newValue) {
+                onChanged: (String? newValue) async{
                   setState(() {
                     dropdownvalue = newValue!;
                   });
+                  await getJobTitle();
                 },
               )),
+              if(dropdownvalue=="Arts And Paintings")...[
+              Padding(
+                  padding: EdgeInsets.all(15),
+                  child: DropdownButtonFormField(
+                    decoration: InputDecoration(
+                      border: OutlineInputBorder(),
+
+                      //hintText: 'Enter Item',
+                    ),
+                    // Initial Value
+                    value: dropdownvalue2,
+
+                    // Down Arrow Icon
+                    icon: const Icon(Icons.keyboard_arrow_down),
+                    // Array list of items
+                    items: jobTile.map((String items) {
+                      return DropdownMenuItem(
+                        value: items,
+                        child: Text(items),
+                      );
+                    }).toList(),
+                    // After selecting the desired option,it will
+                    // change button value to selected value
+                    onChanged: (String? newValue) {
+                      setState(() {
+                        dropdownvalue2 = newValue!;
+                      });
+                    },
+                  )),
+              ],
               Padding(
                   padding: EdgeInsets.all(15),
                   child: SizedBox(
@@ -273,6 +349,8 @@ class AddItemState extends State<AddItem> {
                             for (int i = 0; i < imagefiles!.length; i++) {
                               await uploadImage(File(imagefiles![i].path), id,i+1);
                             }
+
+                            await machinelearningimages(id);
 
                             ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                               content: Text("Item Added Successfully"),

@@ -33,6 +33,10 @@ class ProductsState extends State<Products> {
   List<Item>? itemClayAndPotery = [];
 
 
+  List<Item>? itemArtsAndPainting = [];
+
+
+
 
 
   @override
@@ -51,6 +55,8 @@ class ProductsState extends State<Products> {
     });
 
     await _loadFavourites();
+
+    await _loadArtsAndPaintings();
 
     await _loadLeatherItems();
 
@@ -125,6 +131,32 @@ class ProductsState extends State<Products> {
             itemsLeather![j].favourites='yes';
           }
 
+        }
+      }
+
+    });
+  }
+
+  _loadArtsAndPaintings() async {
+    var response2 = await http.post(
+      Uri.parse(Config.mainUrl + '/getItemType'),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+      body: jsonEncode(<String, String>{'itemType': 'Arts And Paintings'}),
+    );
+
+
+    setState(() {
+      itemArtsAndPainting = (jsonDecode(response2.body) as List)
+          .map((e) => Item.fromList(e))
+          .cast<Item>()
+          .toList();
+      for(var i=0;i<favourites!.length;i++){
+        for(var j=0;j<itemArtsAndPainting!.length;j++) {
+          if(favourites![i].itemId==itemArtsAndPainting![j].itemId){
+            itemArtsAndPainting![j].favourites='yes';
+          }
         }
       }
 
@@ -258,6 +290,91 @@ class ProductsState extends State<Products> {
                   child: Padding(
                       padding: EdgeInsets.all(20),
                       child:InkWell(
+                          onTap: () {
+                            Config.itemType='Arts And Paintings';
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => const GetItemsByType()),
+                            );
+                          },
+                          child: Text(
+                            'Arts And Paintings ➩',
+                            style: TextStyle(
+                                fontWeight: FontWeight.bold, fontSize: 20),
+                          )))),
+              SliverToBoxAdapter(
+                child: SizedBox(
+                  height: 228.0,
+                  width: 300,
+                  child: ListView.builder(
+                    scrollDirection: Axis.horizontal,
+                    itemCount: itemArtsAndPainting!.length,
+                    itemBuilder: (context2, index) {
+                      return new GestureDetector(
+                          onTap: () => {
+
+                            Config.itemId= itemArtsAndPainting![index].itemId,
+                            Navigator.pushNamed(
+                              context,
+                              '/getItemForOrder',
+                              arguments: {'itemId': itemArtsAndPainting![index].itemId,
+                                'itemName':itemArtsAndPainting![index].itemName,
+                                'description':itemArtsAndPainting![index].description,
+                                'price':itemArtsAndPainting![index].price
+                              },
+                            )
+                          },
+                          child: SizedBox(
+                            // width: 100.0,
+
+                            child: Card(
+                                elevation: 20,
+                                margin: EdgeInsets.all(20),
+                                child: Padding(
+                                    padding: EdgeInsets.all(20),
+                                    child: Column(children: <Widget>[
+                                      Container(
+                                        // color: Colors.blue,
+                                        //   width: 150,
+                                        //   height: 150,
+                                          child: Center(
+                                              child: Container(
+                                                height: 100,
+                                                width: 100,
+                                                child: Image.network(Config.mainUrl +
+                                                    "/getFile?path=" +
+                                                    itemArtsAndPainting![index].imageUrl),
+                                              ))),
+                                      Container(
+                                          margin:
+                                          EdgeInsets.fromLTRB(70, 0, 0, 0),
+                                          child: IconButton(
+                                              onPressed: () async{
+                                                setState(() {
+                                                  _isLoading=true;
+                                                });
+                                                await _makeFavourite( itemArtsAndPainting![index].itemId);
+                                                await _loadFavourites();
+                                                await _loadArtsAndPaintings();
+                                                setState(() {
+                                                  _isLoading=false;
+                                                });
+                                              },
+                                              icon: Icon(Icons.favorite),
+                                              alignment: Alignment.topRight,
+                                              color:itemArtsAndPainting![index].favourites==''? Colors.black12:Colors.red)
+                                      ),
+                                    ]))),
+                          ));
+                    },
+                  ),
+                ),
+              ),
+              SliverToBoxAdapter(
+                  child: Padding(
+                      padding: EdgeInsets.all(20),
+                      child:InkWell(
                         onTap: () {
                           Config.itemType='Leather';
                           Navigator.push(
@@ -271,6 +388,7 @@ class ProductsState extends State<Products> {
                         style: TextStyle(
                             fontWeight: FontWeight.bold, fontSize: 20),
                       )))),
+
 
               SliverToBoxAdapter(
                 child: SizedBox(

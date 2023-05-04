@@ -164,7 +164,7 @@ class CustomizeShopsSearchState extends State<CustomizeShopsSearch> {
                               padding: EdgeInsets.all(20),
                               child: Text(dropdownvalue == 'Select a value'
                                   ? ""
-                                  : "Customize Shops Not Found for this type")))
+                                  : "")))
                     ]
                   ])));
   }

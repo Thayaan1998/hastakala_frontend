@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:fyp/config.dart';
 import 'package:fyp/customer/customizeShopsSearch.dart';
 import 'package:fyp/customer/products.dart';
+import 'package:fyp/customer/normalShopsSearch.dart';
+
 import 'package:fyp/object/Item.dart';
 import 'package:fyp/object/Shop.dart';
 import 'package:http/http.dart' as http;
@@ -35,9 +37,15 @@ class SelectTypeState extends State<SelectType> {
   }
 
   _loadDatas() async {
+    setState(() {
+      _isLoading=true;
+    });
     await _loadItems();
     await _loadShops();
     await _loadCustomizeShops();
+    setState(() {
+      _isLoading=false;
+    });
   }
 
   _loadItems() async {
@@ -59,14 +67,13 @@ class SelectTypeState extends State<SelectType> {
 
   _loadShops() async {
     var response2 = await http.post(
-      Uri.parse(Config.mainUrl + '/getShops'),
+      Uri.parse(Config.mainUrl + '/getShops2'),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
       },
       body: jsonEncode(<String, String>{}),
     );
 
-    print(response2);
     setState(() {
       shops = (jsonDecode(response2.body) as List)
           .map((e) => Shop.fromList(e))
@@ -84,7 +91,6 @@ class SelectTypeState extends State<SelectType> {
       body: jsonEncode(<String, String>{}),
     );
 
-    print(response2);
     setState(() {
       customizeShops = (jsonDecode(response2.body) as List)
           .map((e) => Shop.fromList(e))
@@ -186,7 +192,11 @@ class SelectTypeState extends State<SelectType> {
                           padding: EdgeInsets.all(20),
                           child: InkWell(
                               onTap: () {
-                                print("value of your text");
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => const NormalShopsSearch()),
+                                );
                               },
                               child: Text(
                                 'Shops ➩',

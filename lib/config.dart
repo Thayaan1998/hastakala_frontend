@@ -1,5 +1,5 @@
 class Config {
-  static String mainUrl = "http://192.168.1.185:5000";
+  static String mainUrl = "http://192.168.8.101:5000";
   static int vendorId = 0;
   static int customerId = 0;
   static int driverId = 0;
