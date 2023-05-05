@@ -273,53 +273,55 @@ class GetItemsByTypeState extends State<GetItemsByType> {
                                     label: Text(""),
                                   )))
                         ])),
-                    SliverToBoxAdapter(
-                        child: Row(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            children: [
-                          Padding(
-                              padding: EdgeInsets.all(15),
-                              child: SizedBox(
-                                // width: 200, // <-- Your width
-                                width: 200, // <-- Your width
-                                height: 60,
+                    if(Config.itemType=="Arts And Paintings")...[
+                      SliverToBoxAdapter(
+                          child: Row(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: [
+                                Padding(
+                                    padding: EdgeInsets.all(15),
+                                    child: SizedBox(
+                                      // width: 200, // <-- Your width
+                                      width: 200, // <-- Your width
+                                      height: 60,
 
-                                child: ElevatedButton(
-                                  onPressed: () {
-                                    _getFromGallery();
-                                  },
-                                  child: const Text('Open Images'),
-                                ),
-                              )),
-                          Padding(
-                              padding: EdgeInsets.all(5),
-                              child: SizedBox(
-                                  width: 60, // <-- Your width
-                                  height: 60, // <-- Your height
-                                  // width: double.infinity,
-                                  child: ElevatedButton.icon(
-                                    style: ElevatedButton.styleFrom(
-                                        backgroundColor:
-                                            Theme.of(context).primaryColor),
-                                    onPressed: () async {
-                                      uploadSearchImage(imageFile);
-                                    },
-                                    icon: Icon(Icons.search),
-                                    //icon data for elevated button
-                                    label: Text(""),
-                                  )))
-                        ])),
-                    imageFile != null
-                        ? SliverToBoxAdapter(
-                            child: Container(
-                                child: Image.file(
+                                      child: ElevatedButton(
+                                        onPressed: () {
+                                          _getFromGallery();
+                                        },
+                                        child: const Text('Open Images'),
+                                      ),
+                                    )),
+                                Padding(
+                                    padding: EdgeInsets.all(5),
+                                    child: SizedBox(
+                                        width: 60, // <-- Your width
+                                        height: 60, // <-- Your height
+                                        // width: double.infinity,
+                                        child: ElevatedButton.icon(
+                                          style: ElevatedButton.styleFrom(
+                                              backgroundColor:
+                                              Theme.of(context).primaryColor),
+                                          onPressed: () async {
+                                            uploadSearchImage(imageFile);
+                                          },
+                                          icon: Icon(Icons.search),
+                                          //icon data for elevated button
+                                          label: Text(""),
+                                        )))
+                              ])),
+                      imageFile != null
+                          ? SliverToBoxAdapter(
+                        child: Container(
+                            child: Image.file(
                               imageFile,
                               height: 100,
                               width: 100,
                               // fit: BoxFit.cover,
                             )),
-                          )
-                        : SliverToBoxAdapter(child: Container()),
+                      )
+                          : SliverToBoxAdapter(child: Container()),
+                    ],
                     SliverToBoxAdapter(
                         child: SizedBox(
                             child: GridView.builder(

@@ -302,7 +302,10 @@ class AddItemState extends State<AddItem> {
                           onPressed: () {
                             openImages();
                           },
-                          child: Text("Open Images")))),
+                          child: Text("Open Images")
+                      )
+                  )
+              ),
 
               imagefiles != null
                   ? Wrap(
