@@ -6,6 +6,8 @@ import 'package:fyp/db/userDB.dart';
 import 'package:http/http.dart' as http;
 import 'package:fyp/shopowner/makeCustomize.dart';
 import 'package:fyp/shopowner/jobVacancies.dart';
+import 'package:fyp/shopowner/getRowMaterials.dart';
+
 
 
 
@@ -242,6 +244,27 @@ class Accounts2State extends State<Accounts2> {
                       icon: Icon(Icons.work),
                       //icon data for elevated button
                       label: Text("Job Vacancies"),
+                    )))),
+        SliverToBoxAdapter(
+            child: Padding(
+                padding: EdgeInsets.all(15),
+                child: SizedBox(
+                  // width: 200, // <-- Your width
+                    height: 40, // <-- Your height
+                    width: double.infinity,
+                    child: ElevatedButton.icon(
+                      style: ElevatedButton.styleFrom(
+                          backgroundColor: Theme.of(context).primaryColor),
+                      onPressed: () async {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => const GetRowMaterials()),
+                        );
+                      },
+                      icon: Icon(Icons.shop),
+                      //icon data for elevated button
+                      label: Text("Row Materials"),
                     ))))
       ]),
     );
